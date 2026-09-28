@@ -35,7 +35,7 @@ Application web complète de gestion pharmaceutique développée en **PHP / MySQ
 1. **Cloner le projet** ou le placer dans le dossier web de WAMP :
    ```bash
    cd c:\wamp64\www\
-   git clone https://github.com/kalambaycharles4/Pharmacie_Gestion.git
+   git clone https://github.com/kalambaycharles4/Pharmacie.git
    ```
 
 2. **Importer la base de données** :
