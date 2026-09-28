@@ -4,11 +4,18 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Configuration base de données
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'pharmacie_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Configuration base de données (compatible WAMP local et Cloud)
+$db_host = getenv('DB_HOST') ?: (getenv('MYSQLHOST') ?: 'localhost');
+$db_port = getenv('DB_PORT') ?: (getenv('MYSQLPORT') ?: '3306');
+$db_name = getenv('DB_NAME') ?: (getenv('MYSQLDATABASE') ?: 'pharmacie_db');
+$db_user = getenv('DB_USER') ?: (getenv('MYSQLUSER') ?: 'root');
+$db_pass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : (getenv('MYSQLPASSWORD') !== false ? getenv('MYSQLPASSWORD') : '');
+
+define('DB_HOST', $db_host);
+define('DB_PORT', $db_port);
+define('DB_NAME', $db_name);
+define('DB_USER', $db_user);
+define('DB_PASS', $db_pass);
 
 // Configuration application - LUBUMBASHI
 define('WHATSAPP_NUMBER', '+243901726290');
@@ -19,7 +26,8 @@ define('EMAIL_PHARMACIE', 'contact@pharmacielubumbashi.cd');
 
 // Connexion BDD
 try {
-    $pdo = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=utf8mb4", DB_USER, DB_PASS);
+    $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+    $pdo = new PDO($dsn, DB_USER, DB_PASS);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch(PDOException $e) {
